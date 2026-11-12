@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mirador · Stop fake refund photos</title>
+<title>Mirador · Stop paying for fake damage photos</title>
 <meta name="description" content="Mirador asks buyers for a live photo, checks it in seconds and tells marketplaces and food-delivery apps whether to refund.">
 <link rel="icon" type="image/png" href="assets/mascotte-face.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
 /* Mirador redesign — sobre, percutant, pro. Light theme only. */
 :root{
@@ -17,7 +17,7 @@
   --phone:#182430; --screen:#ffffff; --vf:#0e1721;
   --btn:#131c26; --btn-ink:#ffffff;
   --f:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-  --fd:"Fraunces",Georgia,"Times New Roman",serif;
+  --fd:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -31,7 +31,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 .nav{position:sticky;top:12px;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
   background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px 10px 18px;
   box-shadow:0 1px 2px rgba(19,28,38,.05)}
-.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:-.02em}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-weight:800;font-size:19px;letter-spacing:-.025em}
 .seal{width:28px;height:28px;flex:none;display:block}
 .links{display:flex;gap:24px;font-size:14px;font-weight:500;color:var(--body)}
 .links a{color:inherit;text-decoration:none}
@@ -40,18 +40,18 @@ button{font:inherit;cursor:pointer;color:inherit}
 
 .hero{display:flex;flex-direction:column;gap:20px;max-width:820px;padding-top:32px}
 .eyebrow{font-size:12.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--brand-ink)}
-.hero h1{font-family:var(--fd);font-weight:560;font-size:clamp(40px,6.2vw,64px);line-height:1.04;letter-spacing:-.01em}
+.hero h1{font-family:var(--fd);font-weight:800;font-size:clamp(40px,5.4vw,60px);line-height:1.06;letter-spacing:-.035em}
 .hero p{margin:0;font-size:19px;color:var(--body);max-width:60ch}
 
 .how{display:flex;flex-direction:column;gap:28px}
-.how h2{font-family:var(--fd);font-weight:560;font-size:clamp(28px,3.6vw,36px);letter-spacing:-.01em;max-width:22ch}
+.how h2{font-family:var(--fd);font-weight:700;font-size:clamp(28px,3.6vw,36px);letter-spacing:-.025em;max-width:22ch}
 
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 @media (max-width:760px){.stats{grid-template-columns:1fr}}
 .stat{padding:28px;display:flex;flex-direction:column;gap:6px}
 .stat + .stat{border-left:1px solid var(--line)}
 @media (max-width:760px){.stat + .stat{border-left:0;border-top:1px solid var(--line)}}
-.stat b{font-family:var(--fd);font-weight:560;font-size:46px;letter-spacing:-.02em;line-height:1;color:var(--ink)}
+.stat b{font-family:var(--fd);font-weight:800;font-size:46px;letter-spacing:-.03em;line-height:1;color:var(--ink)}
 .stat span{color:var(--body);font-size:15px}
 .stat small{color:var(--muted);font-size:12.5px}
 
@@ -78,7 +78,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 .track div.now{color:var(--ink);font-weight:600}
 .who{align-self:flex-start;font-size:12.5px;font-weight:600;letter-spacing:.02em;border-radius:999px;padding:5px 12px;background:var(--chip);color:var(--body)}
 .who.mirador{background:var(--brand-soft);color:var(--brand-ink)}
-.explain h2{font-family:var(--fd);font-weight:560;font-size:clamp(28px,3.4vw,38px);letter-spacing:-.01em;line-height:1.1}
+.explain h2{font-family:var(--fd);font-weight:700;font-size:clamp(28px,3.4vw,38px);letter-spacing:-.025em;line-height:1.1}
 .explain p{margin:0;font-size:17px;color:var(--body);max-width:56ch}
 .ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .btn{border:0;background:var(--btn);color:var(--btn-ink);border-radius:10px;padding:12px 22px;font-weight:600;font-size:15px}
@@ -167,14 +167,17 @@ button{font:inherit;cursor:pointer;color:inherit}
 .cta{display:flex;gap:10px;flex-wrap:wrap}
 a.btn{text-decoration:none;display:inline-block}
 footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var(--line);padding-top:24px}
+@media (max-width:700px){.hero h1 br{display:none}}
 @media (prefers-reduced-motion:reduce){.flash.go{animation:none}html{scroll-behavior:auto}}
 
 
 .seal{border-radius:50%;object-fit:cover}
 .hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:center;max-width:none}
-.hero .htext{display:flex;flex-direction:column;gap:20px;max-width:640px}
-.hero .mascot{width:252px;max-width:34vw}
-@media (max-width:860px){.hero{grid-template-columns:1fr}.hero .mascot{width:150px;justify-self:center}}
+.hero .htext{display:flex;flex-direction:column;gap:20px;max-width:720px}
+.mascot-wrap{position:relative;display:grid;place-items:center}
+.mascot-wrap::before{content:"";position:absolute;width:min(330px,32vw);aspect-ratio:1;border-radius:50%;background:var(--brand-soft)}
+.hero .mascot{position:relative;width:264px;max-width:34vw}
+@media (max-width:860px){.hero{grid-template-columns:1fr}.hero .mascot{width:160px}.mascot-wrap::before{width:210px}}
 .who{display:inline-flex;align-items:center;gap:7px}
 .who.mirador::before{content:"";width:18px;height:18px;border-radius:50%;background:#fff url("assets/mascotte-face.png") center/cover}
 .s3img{width:84px;align-self:flex-end;margin-top:8px}
@@ -191,10 +194,10 @@ footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var
 
   <header class="hero"><div class="htext">
     <span class="eyebrow">Refund fraud protection for marketplaces and food delivery</span>
-    <h1>Stop fake refund photos before you pay for them.</h1>
+    <h1>Stop paying for<br> fake damage photos.</h1>
     <p>When a buyer says an order arrived damaged, Mirador asks for a live photo, checks it in seconds and tells the platform whether to refund. The seller or restaurant has nothing to prove.</p>
-    <div class="cta"><a class="btn" href="#demo">Play the demo</a><a class="btn light" href="#how">How it works</a></div>
-  </div><img class="mascot" src="assets/mascotte-hero.png" alt="La mascotte Mirador, un suricate"></header>
+    <div class="cta"><a class="btn" href="#demo">Try the demo</a><a class="btn light" href="#how">How it works</a></div>
+  </div><div class="mascot-wrap"><img class="mascot" src="assets/mascotte-hero.png" alt="La mascotte Mirador, un suricate"></div></header>
 
   <section class="how" aria-labelledby="whyTitle">
     <h2 id="whyTitle">Generative AI made fake damage photos a two-click job</h2>
