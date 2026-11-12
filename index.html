@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Mirador · Stop fake refund photos</title>
 <meta name="description" content="Mirador asks buyers for a live photo, checks it in seconds and tells marketplaces and food-delivery apps whether to refund.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 72 72%22%3E%3Crect width=%2272%22 height=%2272%22 rx=%2218%22 fill=%22%230b1f3a%22/%3E%3Cg fill=%22none%22 stroke=%22%23fff%22 stroke-width=%225%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M15 25V16h9%22/%3E%3Cpath d=%22M48 16h9v9%22/%3E%3Cpath d=%22M57 47v9h-9%22/%3E%3Cpath d=%22M24 56h-9v-9%22/%3E%3C/g%3E%3Ccircle cx=%2236%22 cy=%2236%22 r=%228%22 fill=%22%230e7a5f%22/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="assets/mascotte-face.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800&display=swap">
 <style>
@@ -169,23 +169,32 @@ a.btn{text-decoration:none;display:inline-block}
 footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var(--line);padding-top:24px}
 @media (prefers-reduced-motion:reduce){.flash.go{animation:none}html{scroll-behavior:auto}}
 
+
+.seal{border-radius:50%;object-fit:cover}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:center;max-width:none}
+.hero .htext{display:flex;flex-direction:column;gap:20px;max-width:640px}
+.hero .mascot{width:252px;max-width:34vw}
+@media (max-width:860px){.hero{grid-template-columns:1fr}.hero .mascot{width:150px;justify-self:center}}
+.who{display:inline-flex;align-items:center;gap:7px}
+.who.mirador::before{content:"";width:18px;height:18px;border-radius:50%;background:#fff url("assets/mascotte-face.png") center/cover}
+.s3img{width:84px;align-self:flex-end;margin-top:8px}
 </style>
 </head>
 <body>
 
 <div class="wrap">
   <nav class="nav">
-    <div class="logo"><svg class="seal" viewBox="0 0 72 72" aria-hidden="true"><rect width="72" height="72" rx="18" fill="#0b1f3a"/><g fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"><path d="M15 25V16h9"/><path d="M48 16h9v9"/><path d="M57 47v9h-9"/><path d="M24 56h-9v-9"/></g><circle cx="36" cy="36" r="8" fill="#0e7a5f"/></svg>Mirador</div>
+    <div class="logo"><img class="seal" src="assets/mascotte-face.png" alt="">Mirador</div>
     <div class="links"><a href="#demo">Demo</a><a href="#how">How it works</a><a href="#for">Who it's for</a></div>
     <a class="btn" href="#demo" style="padding:9px 18px;font-size:14px">Try the demo</a>
   </nav>
 
-  <header class="hero">
+  <header class="hero"><div class="htext">
     <span class="eyebrow">Refund fraud protection for marketplaces and food delivery</span>
     <h1>Stop fake refund photos before you pay for them.</h1>
     <p>When a buyer says an order arrived damaged, Mirador asks for a live photo, checks it in seconds and tells the platform whether to refund. The seller or restaurant has nothing to prove.</p>
     <div class="cta"><a class="btn" href="#demo">Play the demo</a><a class="btn light" href="#how">How it works</a></div>
-  </header>
+  </div><img class="mascot" src="assets/mascotte-hero.png" alt="La mascotte Mirador, un suricate"></header>
 
   <section class="how" aria-labelledby="whyTitle">
     <h2 id="whyTitle">Generative AI made fake damage photos a two-click job</h2>
@@ -210,7 +219,7 @@ footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var
     <h2 id="howTitle">How Mirador works</h2>
     <div class="steps3">
       <div class="s3"><span class="n">1</span><h3>Capture live</h3><p>The refund button opens the camera, never the gallery. No screenshots, no old photos, no images found online.</p></div>
-      <div class="s3"><span class="n">2</span><h3>Check five signals</h3><p>When it was taken, whether an editing or AI app touched it, whether it was used before, and whether it shows the problem on the right item.</p></div>
+      <div class="s3"><span class="n">2</span><h3>Check five signals</h3><p>When it was taken, whether an editing or AI app touched it, whether it was used before, and whether it shows the problem on the right item.</p><img class="s3img" src="assets/mascotte-loupe.png" alt=""></div>
       <div class="s3"><span class="n">3</span><h3>Decide and seal</h3><p>Honest buyers are refunded at once. Fakes are stopped. Every photo gets a fingerprint, so it can't be changed later.</p></div>
     </div>
   </section>
