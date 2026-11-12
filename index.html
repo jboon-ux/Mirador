@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mirador · Stop fake refund photos</title>
+<meta name="description" content="Mirador asks buyers for a live photo, checks it in seconds and tells marketplaces and food-delivery apps whether to refund.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 72 72%22%3E%3Crect width=%2272%22 height=%2272%22 rx=%2218%22 fill=%22%230b1f3a%22/%3E%3Cg fill=%22none%22 stroke=%22%23fff%22 stroke-width=%225%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M15 25V16h9%22/%3E%3Cpath d=%22M48 16h9v9%22/%3E%3Cpath d=%22M57 47v9h-9%22/%3E%3Cpath d=%22M24 56h-9v-9%22/%3E%3C/g%3E%3Ccircle cx=%2236%22 cy=%2236%22 r=%228%22 fill=%22%2334d399%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: hero, case picker, a guided stage (explanation card + large phone), then a three-step explainer */
+:root{
+  --bg:#f8fafc; --surface:#ffffff; --ink:#0b1f3a; --body:#475569; --muted:#64748b; --line:#e2e8f0; --chip:#f1f5f9;
+  --brand:#34d399; --brand-soft:#d1fae5; --brand-ink:#047857;
+  --ok:#15803d; --ok-soft:#f0fdf4; --bad:#b91c1c; --bad-soft:#fef2f2; --warn:#b45309; --warn-soft:#fffbeb;
+  --phone:#0b1f3a; --screen:#ffffff; --vf:#07142a;
+  --btn:#0b1f3a; --btn-ink:#ffffff;
+  --f:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#07111f; --surface:#0e1b2e; --ink:#f1f5f9; --body:#cbd5e1; --muted:#94a3b8; --line:#1e293b; --chip:#1a2438;
+  --brand:#34d399; --brand-soft:#0d2e24; --brand-ink:#6ee7b7;
+  --ok:#4ade80; --ok-soft:#0f2a1c; --bad:#f87171; --bad-soft:#2d1215; --warn:#fbbf24; --warn-soft:#2a210c;
+  --phone:#334155; --screen:#0f172a; --vf:#020617; --btn:#f1f5f9; --btn-ink:#0f172a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#07111f; --surface:#0e1b2e; --ink:#f1f5f9; --body:#cbd5e1; --muted:#94a3b8; --line:#1e293b; --chip:#1a2438;
+  --brand:#34d399; --brand-soft:#0d2e24; --brand-ink:#6ee7b7;
+  --ok:#4ade80; --ok-soft:#0f2a1c; --bad:#f87171; --bad-soft:#2d1215; --warn:#fbbf24; --warn-soft:#2a210c;
+  --phone:#334155; --screen:#0f172a; --vf:#020617; --btn:#f1f5f9; --btn-ink:#0f172a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 56px}
+.wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1,h2,h3{margin:0;text-wrap:balance;color:var(--ink)}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:3px}
+
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.02em}
+.seal{width:30px;height:30px;flex:none;display:block}
+.tag{font-size:13px;font-weight:500;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 12px}
+
+.hero{display:flex;flex-direction:column;gap:16px;max-width:780px}
+.eyebrow{font-size:14px;font-weight:600;color:var(--brand-ink)}
+.hero h1{font-size:clamp(36px,6vw,58px);font-weight:800;line-height:1.05;letter-spacing:-.035em}
+.hero p{margin:0;font-size:19px;color:var(--body);max-width:62ch}
+
+.pick{display:flex;flex-direction:column;gap:12px}
+.pick h2{font-size:15px;font-weight:600;color:var(--muted)}
+.cases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:820px){.cases{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.case{display:flex;flex-direction:column;gap:4px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;min-width:0}
+.case b{font-size:15px;font-weight:700}
+.case span{font-size:13.5px;color:var(--muted)}
+.case[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+.case:hover{border-color:var(--muted)}
+.case .k{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:32px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:32px}
+@media (max-width:860px){.stage{grid-template-columns:minmax(0,1fr);padding:20px}}
+.explain{display:flex;flex-direction:column;gap:20px;min-width:0}
+.track{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.track div{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:600;color:var(--muted);min-width:0}
+.track div::before{content:"";height:4px;border-radius:4px;background:var(--line)}
+.track div.done::before,.track div.now::before{background:var(--ink)}
+.track div.now{color:var(--ink)}
+.who{align-self:flex-start;font-size:13px;font-weight:600;border-radius:999px;padding:5px 12px;background:var(--chip);color:var(--body)}
+.who.mirador{background:var(--brand-soft);color:var(--brand-ink)}
+.explain h2{font-size:clamp(26px,3.4vw,36px);font-weight:800;letter-spacing:-.03em;line-height:1.12}
+.explain p{margin:0;font-size:17px;color:var(--body);max-width:56ch}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border:0;background:var(--btn);color:var(--btn-ink);border-radius:999px;padding:12px 22px;font-weight:600;font-size:15px}
+.btn.light{background:var(--chip);color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.hint{font-size:13.5px;color:var(--muted)}
+
+.verdict{border-radius:16px;padding:18px 20px;display:flex;flex-direction:column;gap:6px}
+.verdict.ok{background:var(--ok-soft)} .verdict.bad{background:var(--bad-soft)} .verdict.warn{background:var(--warn-soft)}
+.verdict b{font-size:20px;font-weight:800;letter-spacing:-.02em}
+.verdict.ok b{color:var(--ok)} .verdict.bad b{color:var(--bad)} .verdict.warn b{color:var(--warn)}
+.verdict span{font-size:15px;color:var(--body)}
+.side{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.side{grid-template-columns:1fr}}
+.side div{border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px;color:var(--body)}
+.side b{display:block;font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:2px}
+
+.phone{width:100%;max-width:340px;justify-self:center;background:var(--phone);border-radius:44px;padding:11px}
+.screen{background:var(--screen);border-radius:34px;height:640px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:12px 22px 6px;font-size:12px;font-weight:600;color:var(--ink)}
+.island{width:84px;height:22px;border-radius:12px;background:var(--phone)}
+.app{flex:1;display:flex;flex-direction:column;gap:14px;padding:8px 18px 18px;min-height:0}
+.apphead{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px}
+.apphead i{width:22px;height:22px;border-radius:7px;background:var(--chip);display:grid;place-items:center;font-style:normal;font-size:12px;color:var(--muted)}
+.order{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:16px;padding:10px}
+.order svg{width:56px;height:56px;flex:none;border-radius:12px;background:var(--chip)}
+.order b{display:block;font-size:14.5px}
+.order span{font-size:13px;color:var(--muted)}
+.q{font-weight:700;font-size:16px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.opt.sel{border-color:var(--ink);font-weight:600}
+.opt.sel::after{content:"";width:14px;height:14px;border-radius:50%;background:var(--ink);box-shadow:inset 0 0 0 4px var(--screen)}
+.grow{flex:1}
+.pbtn{border:0;border-radius:14px;background:var(--btn);color:var(--btn-ink);padding:13px;font-weight:600;font-size:15px;width:100%}
+
+.vf{flex:1;background:var(--vf);display:flex;flex-direction:column;position:relative}
+.vf .top{display:flex;justify-content:space-between;padding:10px 16px;color:#cbd5e1;font-size:12.5px}
+.vf .top span:first-child{color:#ffffff;font-weight:600}
+.frame{position:relative;flex:1;margin:10px 22px;display:grid;place-items:center}
+.frame svg,.frame img{width:82%;max-height:300px;object-fit:contain}
+.corner{position:absolute;width:26px;height:26px;border-color:#ffffff;border-style:solid}
+.c1{top:0;left:0;border-width:3px 0 0 3px}.c2{top:0;right:0;border-width:3px 3px 0 0}.c3{bottom:0;right:0;border-width:0 3px 3px 0}.c4{bottom:0;left:0;border-width:0 0 3px 3px}
+.shot{display:flex;align-items:center;justify-content:space-between;padding:16px 34px 26px}
+.gal{width:40px;height:40px;border-radius:10px;border:1.5px dashed #64748b;position:relative}
+.gal::after{content:"";position:absolute;left:-4px;right:-4px;top:50%;height:2px;background:#f87171;transform:rotate(-45deg)}
+.shutter{width:66px;height:66px;border-radius:50%;border:4px solid #ffffff;background:transparent;padding:0;display:grid;place-items:center}
+.shutter::after{content:"";width:50px;height:50px;border-radius:50%;background:#ffffff}
+.flash{position:absolute;inset:0;background:#ffffff;opacity:0;pointer-events:none}
+.flash.go{animation:fl .35s ease-out}
+@keyframes fl{0%{opacity:.9}100%{opacity:0}}
+.galnote{color:#94a3b8;font-size:12px;text-align:center;padding-bottom:4px}
+
+.clist{display:flex;flex-direction:column;gap:10px}
+.crow{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--chip);font-size:14px;opacity:.4}
+.crow.on{opacity:1}
+.crow.ok{background:var(--ok-soft)} .crow.bad{background:var(--bad-soft)} .crow.warn{background:var(--warn-soft)}
+.ic{width:20px;height:20px;border-radius:50%;flex:none;margin-top:1px;position:relative;background:var(--line)}
+.crow.ok .ic{background:var(--ok)} .crow.bad .ic{background:var(--bad)} .crow.warn .ic{background:var(--warn)}
+.crow.ok .ic::after{content:"";position:absolute;left:7px;top:4px;width:5px;height:9px;border:solid var(--screen);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.crow.bad .ic::after,.crow.bad .ic::before{content:"";position:absolute;left:9px;top:5px;width:2px;height:10px;background:var(--screen);transform:rotate(45deg)}
+.crow.bad .ic::before{transform:rotate(-45deg)}
+.crow.warn .ic::after{content:"";position:absolute;left:9px;top:4px;width:2px;height:7px;background:var(--screen);box-shadow:0 9px 0 0 var(--screen)}
+.crow b{display:block;font-weight:600}
+.crow span{color:var(--body);font-size:13px}
+.res{display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center;padding-top:20px}
+.big{width:64px;height:64px;border-radius:50%;position:relative}
+.big.ok{background:var(--ok-soft)} .big.bad{background:var(--bad-soft)} .big.warn{background:var(--warn-soft)}
+.big::after{content:"";position:absolute;left:50%;top:50%;width:22px;height:22px;border-radius:50%;transform:translate(-50%,-50%)}
+.big.ok::after{background:var(--ok)} .big.bad::after{background:var(--bad)} .big.warn::after{background:var(--warn)}
+.res h3{font-size:21px;font-weight:800;letter-spacing:-.02em}
+.res p{margin:0;font-size:14.5px;color:var(--body)}
+.res img,.res svg{width:110px;height:110px;object-fit:cover;border-radius:14px;background:var(--chip)}
+
+.how{display:flex;flex-direction:column;gap:20px}
+.how h2{font-size:30px;font-weight:800;letter-spacing:-.03em}
+.steps3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.steps3{grid-template-columns:1fr}}
+.s3{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:8px}
+.s3 .n{width:32px;height:32px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);font-weight:800;display:grid;place-items:center;font-size:15px}
+.s3 h3{font-size:18px;font-weight:700}
+.s3 p{margin:0;color:var(--body);font-size:15px}
+footer{font-size:13px;color:var(--muted);max-width:90ch}
+@media (prefers-reduced-motion:reduce){.flash.go{animation:none}}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.stats{grid-template-columns:1fr}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px;display:flex;flex-direction:column;gap:6px}
+.stat b{font-size:44px;font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+.stat span{color:var(--body);font-size:15px}
+.stat small{color:var(--muted);font-size:12.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+a.btn{text-decoration:none;display:inline-block}
+.who-for{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.who-for{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="nav">
+    <div class="logo"><svg class="seal" viewBox="0 0 72 72" aria-hidden="true"><rect width="72" height="72" rx="18" fill="#0b1f3a"/><g fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"><path d="M15 25V16h9"/><path d="M48 16h9v9"/><path d="M57 47v9h-9"/><path d="M24 56h-9v-9"/></g><circle cx="36" cy="36" r="8" fill="#34d399"/></svg>Mirador</div>
+    <a class="btn" href="#demo" style="padding:9px 18px;font-size:14px">Try the demo</a>
+  </nav>
+
+  <header class="hero">
+    <span class="eyebrow">Refund fraud protection for marketplaces and food delivery</span>
+    <h1>Stop fake refund photos before you pay for them.</h1>
+    <p>When a buyer says an order arrived damaged, Mirador asks for a live photo, checks it in seconds and tells the platform whether to refund. The seller or restaurant has nothing to prove.</p>
+    <div class="cta"><a class="btn" href="#demo">Play the demo</a><a class="btn light" href="#how">How it works</a></div>
+  </header>
+
+  <section class="how" aria-labelledby="whyTitle">
+    <h2 id="whyTitle">Generative AI made fake damage photos a two-click job</h2>
+    <div class="stats">
+      <div class="stat"><b>65%</b><span>of shoppers say AI makes false refund claims easier</span><small>Ravelin, State of Refunds 2026, 6,200 shoppers</small></div>
+      <div class="stat"><b>50–70%</b><span>of disputed orders where Zomato absorbs the loss</span><small>Deepinder Goyal, Zomato CEO, January 2026</small></div>
+      <div class="stat"><b>+5%</b><span>cake-damage reports at Zomato once AI-edited photos spread</span><small>Deepinder Goyal, Zomato CEO, January 2026</small></div>
+    </div>
+  </section>
+
+  <section class="pick" id="demo" aria-labelledby="pickTitle">
+    <h2 id="pickTitle">Pick a case to play</h2>
+    <div class="cases" id="cases"></div>
+  </section>
+
+  <section class="stage" aria-live="polite">
+    <div class="explain" id="explain"></div>
+    <div class="phone" aria-label="Buyer's phone"><div class="screen" id="screen"></div></div>
+  </section>
+
+  <section class="how" id="how" aria-labelledby="howTitle">
+    <h2 id="howTitle">How Mirador works</h2>
+    <div class="steps3">
+      <div class="s3"><span class="n">1</span><h3>Capture live</h3><p>The refund button opens the camera, never the gallery. No screenshots, no old photos, no images found online.</p></div>
+      <div class="s3"><span class="n">2</span><h3>Check five signals</h3><p>When it was taken, whether an editing or AI app touched it, whether it was used before, and whether it shows the problem on the right item.</p></div>
+      <div class="s3"><span class="n">3</span><h3>Decide and seal</h3><p>Honest buyers are refunded at once. Fakes are stopped. Every photo gets a fingerprint, so it can't be changed later.</p></div>
+    </div>
+  </section>
+
+  <section class="how" aria-labelledby="forTitle">
+    <h2 id="forTitle">Who it's for</h2>
+    <div class="who-for">
+      <div class="s3"><h3>Marketplaces and delivery apps</h3><p>Add live capture to your refund flow through an API. Refund honest buyers instantly, stop fake photos, and spend fewer agent minutes per dispute.</p></div>
+      <div class="s3"><h3>Sellers and restaurants</h3><p>Stop paying for damage that never happened, without having to prove anything yourself.</p></div>
+    </div>
+  </section>
+
+  <footer>Mirador is an early-stage project. Prototype. The three prepared cases are simulations that show how Mirador reacts. “Try your own photo” runs real checks in your browser: capture timing, file metadata and reuse detection against photos you tried before on this device. Your photo never leaves your browser. The AI image review runs in the full version.</footer>
+</div>
+<input type="file" id="cam" accept="image/*" capture="environment" hidden>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const euro=n=>new Intl.NumberFormat("en-IE",{style:"currency",currency:"EUR"}).format(n);
+
+/* flat illustrations drawn in code, so the simulated cases need no photos */
+const ART={
+ coat:`<svg viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" fill="#e9e4dc"/><path d="M42 18l18 10 18-10 22 14-8 22-8-4v52H36V50l-8 4-8-22z" fill="#5b6b7f"/><path d="M60 28v70" stroke="#46556a" stroke-width="2"/><circle cx="64" cy="50" r="2" fill="#2b3442"/><circle cx="64" cy="64" r="2" fill="#2b3442"/><circle cx="64" cy="78" r="2" fill="#2b3442"/><path d="M40 62l6 4-4 5 7 4-3 6" fill="none" stroke="#f3efe8" stroke-width="3" stroke-linejoin="round"/></svg>`,
+ bowl:`<svg viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" fill="#d8cbb8"/><path d="M70 86c14 2 30 6 34 16 2 8-10 10-22 6-10-3-14-10-24-12z" fill="#c2551c" opacity=".85"/><circle cx="56" cy="56" r="34" fill="#f5f5f2"/><circle cx="56" cy="56" r="27" fill="#fbfaf6"/><rect x="40" y="40" width="10" height="10" rx="2" fill="#f08a5d"/><rect x="54" y="44" width="10" height="10" rx="2" fill="#f08a5d"/><rect x="44" y="56" width="10" height="10" rx="2" fill="#f08a5d"/><circle cx="66" cy="62" r="6" fill="#7fb069"/><circle cx="60" cy="70" r="4" fill="#7fb069"/><path d="M68 40c4 2 6 6 5 10" stroke="#2f3b2b" stroke-width="3" fill="none"/></svg>`,
+ screen:`<svg viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" fill="#3b3f46"/><rect x="22" y="10" width="76" height="100" rx="10" fill="#111111"/><rect x="26" y="18" width="68" height="84" rx="4" fill="#d8cbb8"/><circle cx="58" cy="56" r="22" fill="#f5f5f2"/><rect x="48" y="46" width="7" height="7" fill="#f08a5d"/><rect x="58" y="50" width="7" height="7" fill="#f08a5d"/><circle cx="64" cy="62" r="4" fill="#7fb069"/><path d="M66 74c8 1 18 4 20 10" stroke="#c2551c" stroke-width="6" fill="none"/><g stroke="#ffffff" stroke-opacity=".14">${Array.from({length:14},(_,i)=>`<path d="M26 ${20+i*6}h68"/>`).join("")}</g></svg>`,
+ blank:`<svg viewBox="0 0 120 120" aria-hidden="true"><rect width="120" height="120" fill="#cbd5e1"/><rect x="34" y="34" width="52" height="52" rx="8" fill="#94a3b8"/></svg>`
+};
+
+const CASES={
+ honest:{label:"Honest buyer",sub:"Real damage, real photo",kind:"ok",app:"Reloop",appSub:"Second-hand",buyer:"Léa",item:"Wool coat, size M",thing:"coat",meta:"From @julie.v · Delivered yesterday",amount:45,issue:"Arrived torn",opts:["Arrived torn","Not as described","Wrong item","Never arrived"],art:"coat",
+  checks:[["ok","Taken just now","6 seconds before sending"],["ok","Not edited","No editing app in the file"],["ok","Not made by AI","Fabric, light and shadows look natural"],["ok","Never seen before","No match in earlier refund photos"],["ok","Shows the problem","A tear is visible on a grey wool coat"]],
+  verdict:["ok","Refund approved automatically","€45.00 back to Léa in under a minute. No agent needed."],
+  sideA:["The seller","Julie is told the coat was damaged in transit. Her shop rating is not affected."],sideB:["Reloop","Refund paid and claim closed, with no agent time."],
+  phoneRes:["ok","Refund approved","€45.00 is on its way, Léa. Sorry about your coat."]},
+ ai:{label:"AI-edited photo",sub:"Spill added with an app",kind:"bad",app:"Miam Express",appSub:"Food delivery",buyer:"Karim",item:"Poke bowl + mochi",thing:"order",meta:"From Sushi Gare · Delivered 12:41",amount:18.9,issue:"Food spilled",opts:["Food spilled","Item missing","Wrong order","Arrived cold"],art:"bowl",
+  checks:[["ok","Taken just now","9 seconds before sending"],["bad","Edited","An AI photo-editing app left its tag in the file"],["bad","Probably made by AI","The sauce has no shadow and its texture repeats"],["ok","Never seen before","No match in earlier refund photos"],["warn","Problem looks staged","The spill sits outside the bowl's shadow"]],
+  verdict:["bad","Photo rejected","Karim is asked for a new live photo. No refund is paid."],
+  sideA:["The restaurant","Sushi Gare keeps its €18.90 and doesn't have to argue."],sideB:["Miam Express","€18.90 saved. The account is flagged after a second rejected photo."],
+  phoneRes:["bad","We couldn't use this photo","It looks edited. Take a new photo of your order now to continue."]},
+ reused:{label:"Reused photo",sub:"Same spill, new account",kind:"bad",app:"Miam Express",appSub:"Food delivery",buyer:"Sam",item:"Poke bowl",thing:"order",meta:"From Poké Lab · Delivered 20:05",amount:14.5,issue:"Food spilled",opts:["Food spilled","Item missing","Wrong order","Arrived cold"],art:"screen",
+  checks:[["ok","Taken just now","4 seconds before sending"],["ok","Not edited","No editing app in the file"],["warn","Photo of a screen","Screen lines and a phone edge are visible"],["bad","Already used","Near-identical to a refund photo from another account on 3 Nov"],["ok","Shows the problem","A spilled bowl is visible"]],
+  verdict:["bad","Refund blocked","The same spill was already used for a refund on another account. Both accounts go to review."],
+  sideA:["The restaurant","Poké Lab keeps its €14.50 and is never asked for proof."],sideB:["Miam Express","€14.50 saved, and two linked accounts found."],
+  phoneRes:["bad","We couldn't use this photo","This photo was already used in another claim. Our team will review it."]},
+ own:{label:"Try your own photo",sub:"Real checks in your browser",kind:"own",app:"Reloop",appSub:"Second-hand",buyer:"You",item:"Your item",thing:"item",meta:"Delivered today",amount:30,issue:"Arrived damaged",opts:["Arrived damaged","Not as described","Wrong item","Never arrived"],art:"blank"}
+};
+const ORDER=["honest","ai","reused","own"];
+const STEPS=["Buyer reports","Live photo","Mirador checks","Decision"];
+const S={c:"honest",step:0,shown:0,timer:null,own:null,ownChecks:null,ownVerdict:null,ownPhone:null,ownThumb:null,db:null,sample:null,imgOK:false,imgLim:null,run:0};
+
+function renderCases(){
+  $("#cases").innerHTML=ORDER.map(k=>{const c=CASES[k],col=c.kind==="ok"?"var(--ok)":c.kind==="bad"?"var(--bad)":"var(--brand)";
+    return `<button class="case" type="button" data-k="${k}" aria-pressed="${S.c===k}"><b><span class="k" style="background:${col}"></span>${c.label}</b><span>${c.sub}</span></button>`}).join("");
+  document.querySelectorAll(".case").forEach(b=>b.onclick=()=>{S.c=b.dataset.k;go(0)});
+}
+
+function go(step){
+  clearInterval(S.timer); S.run++; S.step=step; S.shown=0;
+  if(step<=1 && S.c==="own"){ S.ownChecks=null; S.ownVerdict=null; S.ownPhone=null; if(step===0) S.own=null }
+  renderCases(); render();
+  if(step===2) runChecks();
+}
+
+function copy(){
+  const c=CASES[S.c], own=S.c==="own";
+  return [
+   {who:own?"You, the buyer":`${c.buyer}, the buyer`,cls:"",h:own?"You say your item arrived damaged.":`${c.buyer} says the ${c.thing} arrived damaged.`,
+    p:`On ${c.app}, ${own?"you open":c.buyer+" opens"} the order and asks for ${euro(c.amount)} back. Today most platforms accept any photo, from anywhere, and refund to keep the customer happy.`,next:"Ask for a photo"},
+   {who:"Mirador",cls:"mirador",h:"Mirador opens the camera, not the gallery.",
+    p:own?"Tap the white button on the phone, then take a photo of anything around you. You can also pick an old image to see how Mirador treats it.":`${c.buyer} has to photograph the ${c.thing} right now. Old photos, screenshots and pictures from the internet can't be sent. Tap the white button on the phone.`,next:"Take the photo"},
+   {who:"Mirador",cls:"mirador",h:"Five checks in a few seconds.",
+    p:"Each check answers one simple question. Green means fine, orange means doubtful, red means a sign of fraud.",next:"See the decision"},
+   {who:`${c.app}, the platform`,cls:"",h:"The platform gets a clear answer.",p:"",next:"Next case"}
+  ];
+}
+
+function checksDone(){ const list=S.c==="own"?S.ownChecks:CASES[S.c].checks; return !!list && S.shown>=list.length && (S.c!=="own"||!!S.ownVerdict) }
+
+function render(){
+  const c=CASES[S.c], t=copy()[S.step];
+  const track=STEPS.map((s,i)=>`<div class="${i<S.step?"done":i===S.step?"now":""}">${s}</div>`).join("");
+  let extra="";
+  if(S.step===3){
+    const v=S.c==="own"?S.ownVerdict:c.verdict;
+    if(v) extra=`<div class="verdict ${v[0]}"><b>${esc(v[1])}</b><span>${esc(v[2])}</span></div>`+
+      (S.c==="own"?"":`<div class="side"><div><b>${esc(c.sideA[0])}</b>${esc(c.sideA[1])}</div><div><b>${esc(c.sideB[0])}</b>${esc(c.sideB[1])}</div></div>`);
+  }
+  const nextDisabled=(S.step===1)||(S.step===2&&!checksDone());
+  $("#explain").innerHTML=`<div class="track" aria-label="Progress">${track}</div>
+    <span class="who ${t.cls}">${esc(t.who)}</span>
+    <h2>${esc(t.h)}</h2>${t.p?`<p>${esc(t.p)}</p>`:""}${extra}
+    <div class="ctrl">
+      ${S.step>0?`<button class="btn light" id="back" type="button">Back</button>`:""}
+      <button class="btn" id="next" type="button" ${nextDisabled?"disabled":""}>${esc(t.next)}</button>
+      ${S.step===1?`<span class="hint">Use the camera button on the phone</span>`:""}
+    </div>`;
+  const b=$("#back"); if(b) b.onclick=()=>go(S.step-1);
+  $("#next").onclick=()=>{ if(S.step===3){ const i=ORDER.indexOf(S.c); S.c=ORDER[(i+1)%ORDER.length]; go(0) } else go(S.step+1) };
+  renderPhone();
+}
+
+const bar=()=>`<div class="sbar"><span>9:41</span><span class="island"></span><span>5G</span></div>`;
+const head=c=>`<div class="apphead"><i>‹</i>${esc(c.app)}<span style="font-weight:500;color:var(--muted);font-size:13px">· ${esc(c.appSub)}</span></div>`;
+
+function renderPhone(){
+  const c=CASES[S.c], s=$("#screen");
+  if(S.step===0){
+    s.innerHTML=bar()+`<div class="app">${head(c)}
+      <div class="order">${ART[c.art]}<div><b>${esc(c.item)}</b><span>${esc(c.meta)}</span></div></div>
+      <div class="q">What went wrong?</div>
+      <div class="opts">${c.opts.map(o=>`<div class="opt ${o===c.issue?"sel":""}">${esc(o)}</div>`).join("")}</div>
+      <div class="grow"></div>
+      <button class="pbtn" type="button" id="preq">Request ${euro(c.amount)} refund</button></div>`;
+    $("#preq").onclick=()=>go(1);
+  } else if(S.step===1){
+    const img=S.c==="own"?`<span style="color:#94a3b8;font-size:13px">Point the camera at an item</span>`:ART[c.art];
+    s.innerHTML=bar()+`<div class="vf"><div class="top"><span>Show us the problem</span><span>Live only</span></div>
+      <div class="frame"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>${img}</div>
+      <div class="galnote">Gallery uploads are turned off</div>
+      <div class="shot"><span class="gal" aria-hidden="true"></span><button class="shutter" id="shutter" type="button" aria-label="Take the photo"></button><span style="width:40px"></span></div>
+      <div class="flash" id="flash"></div></div>`;
+    $("#shutter").onclick=()=>{
+      if(S.c==="own"){ $("#cam").click(); return }
+      $("#flash").classList.add("go"); setTimeout(()=>go(2),380);
+    };
+  } else if(S.step===2){
+    const list=(S.c==="own"?S.ownChecks:c.checks)||[];
+    const qs=["Taken just now?","Edited?","Made by AI?","Seen before?","Shows the problem?"];
+    const n=Math.max(qs.length,list.length);
+    const rows=Array.from({length:n},(_,i)=>{const r=list[i],on=r&&i<S.shown;
+      return `<div class="crow ${on?r[0]+" on":""}"><span class="ic"></span><div><b>${on?esc(r[1]):esc(qs[i]||"")}</b><span>${on?esc(r[2]):"Checking…"}</span></div></div>`}).join("");
+    s.innerHTML=bar()+`<div class="app"><div class="apphead">Checking your photo</div><div class="clist">${rows}</div></div>`;
+  } else {
+    const r=S.c==="own"?S.ownPhone:c.phoneRes;
+    const pic=S.c==="own"&&S.ownThumb?`<img src="${S.ownThumb}" alt="">`:(S.c==="own"?"":ART[c.art]);
+    s.innerHTML=bar()+`<div class="app">${head(c)}<div class="res"><span class="big ${r?r[0]:"warn"}"></span><h3>${esc(r?r[1]:"")}</h3><p>${esc(r?r[2]:"")}</p>${pic}</div></div>`;
+  }
+}
+
+function runChecks(){
+  if(S.c==="own"){ analyseOwn(S.run); return }
+  S.timer=setInterval(()=>{ S.shown++; renderPhone(); if(S.shown>=5){ clearInterval(S.timer); render() } },650);
+}
+
+/* ---------- real checks for "Try your own photo" ---------- */
+$("#cam").addEventListener("change",e=>{
+  const f=e.target.files[0]; e.target.value=""; if(!f) return;
+  if(S.own?.url) URL.revokeObjectURL(S.own.url);
+  S.own={file:f,url:URL.createObjectURL(f),pickedAt:Date.now()};
+  const fl=$("#flash"); if(fl) fl.classList.add("go"); setTimeout(()=>go(2),380);
+});
+async function sha(file){const d=await crypto.subtle.digest("SHA-256",await file.arrayBuffer());return [...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,"0")).join("")}
+async function scanMeta(file){
+  const s=new TextDecoder("latin1").decode(await file.slice(0,262144).arrayBuffer());
+  return {exif:/Exif\0\0/.test(s),
+    editor:(s.match(/Adobe Photoshop|Photoshop|GIMP|Lightroom|Snapseed|Canva|Pixelmator|Affinity Photo|PicsArt|Facetune/i)||[])[0],
+    gen:(s.match(/trainedAlgorithmicMedia|Midjourney|DALL[·\-]?E|Stable Diffusion|Adobe Firefly|Imagen|c2pa\.ai_generat|OpenAI/i)||[])[0]};
+}
+async function loadImg(u){const im=new Image();im.src=u;await im.decode();return im}
+async function scaled(im,max,q){const k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement("canvas");
+  c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+  return {url:c.toDataURL("image/jpeg",q),blob:await new Promise(r=>c.toBlob(r,"image/jpeg",q))}}
+function dhash(im){const c=document.createElement("canvas");c.width=9;c.height=8;const g=c.getContext("2d");g.drawImage(im,0,0,9,8);
+  const d=g.getImageData(0,0,9,8).data,L=i=>d[i*4]*.299+d[i*4+1]*.587+d[i*4+2]*.114;let b="";
+  for(let y=0;y<8;y++)for(let x=0;x<8;x++)b+=L(y*9+x)>L(y*9+x+1)?"1":"0";return b}
+const ham=(a,b)=>{let n=0;for(let i=0;i<a.length;i++)if(a[i]!==b[i])n++;return n};
+
+async function analyseOwn(run){
+  if(!S.own){ go(1); return }
+  const alive=()=>run===S.run;
+  const reveal=row=>{ if(!alive()) return; S.ownChecks.push(row); S.shown=S.ownChecks.length; renderPhone() };
+  S.ownChecks=[]; renderPhone();
+  const f=S.own.file; let risk=0;
+  const age=(S.own.pickedAt-f.lastModified)/1000;
+  if(age<=180) reveal(["ok","Taken just now",`${Math.max(0,Math.round(age))} seconds before sending`]);
+  else { risk+=35; reveal(["bad","Not taken just now",`The file is ${age<3600?Math.round(age/60)+" minutes":age<172800?Math.round(age/3600)+" hours":Math.round(age/86400)+" days"} old`]) }
+  const m=await scanMeta(f);
+  if(m.editor||m.gen){ risk+=m.gen?60:40; reveal(["bad","Edited",`“${m.gen||m.editor}” found in the file`]) }
+  else if(!m.exif){ risk+=10; reveal(["warn","Possibly exported","Camera details were removed from the file"]) }
+  else reveal(["ok","Not edited","No editing app in the file"]);
+  const im=await loadImg(S.own.url), dh=dhash(im); S.ownThumb=(await scaled(im,300,.7)).url;
+  const v=await vision(im,f); if(!alive()) return;
+  if(!v) reveal(["warn","AI review not in this demo","It runs in the full version"]);
+  else if(v.error) reveal(["warn","AI review failed",String(v.error)]);
+  else { const k=v.verdict==="authentic"?"ok":v.verdict==="suspicious"?"warn":"bad"; risk+=Math.round((Number(v.risk)||0)*.5);
+    reveal([k,k==="ok"?"Not made by AI":k==="warn"?"Possibly edited":"Probably made by AI",(v.reasons||[]).slice(0,2).join(" · ")||"No clear sign"]) }
+  let twin=null;
+  const past=loadPast(); past.forEach(x=>{ if(x&&x.dhash){const n=ham(dh,x.dhash); if(n<=8&&(!twin||n<twin.n)) twin={n,at:x.at}} });
+  if(twin){ risk+=50; reveal(["bad","Already used",`Near-identical to a photo sent on ${new Date(twin.at).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}`]) }
+  else reveal(["ok","Never seen before",past.length?`No match in your ${past.length} earlier photo${past.length>1?"s":""}`:"First photo tried on this device"]);
+  if(v&&!v.error&&v.shows_damage===false){ risk+=20; reveal(["warn","Problem not visible","No damage could be seen"]) }
+  else if(v&&!v.error) reveal(["ok","Shows the problem",v.damage||"Damage is visible"]);
+  else reveal(["warn","Problem not checked","Needs the AI review"]);
+  if(!alive()) return;
+  risk=Math.min(100,risk);
+  savePast({dhash:dh,at:Date.now()});
+  const lvl=risk<30?"ok":risk<60?"warn":"bad";
+  S.ownVerdict = lvl==="ok"?["ok","Refund approved automatically",`Fraud risk ${risk}/100. Paid without an agent.`]
+    : lvl==="warn"?["warn","Sent to an agent",`Fraud risk ${risk}/100. Something looks doubtful.`]
+    : ["bad","Photo rejected",`Fraud risk ${risk}/100. A new live photo is required.`];
+  S.ownPhone = lvl==="ok"?["ok","Refund approved","€30.00 is on its way."]:lvl==="warn"?["warn","We're taking a closer look","An agent will reply within 24 hours."]:["bad","We couldn't use this photo","Take a new photo of your item now."];
+  if(alive()) render();
+}
+async function vision(im,f){
+  if(!S.sample||!S.imgOK) return null;
+  const blob=(S.imgLim&&f.size<=S.imgLim.maxInputBytes&&(S.imgLim.mediaTypes||[]).includes(f.type))?f:(await scaled(im,1600,.85)).blob;
+  const prompt=`You check refund evidence for a second-hand marketplace. The buyer says their item arrived damaged and sent the attached photo.
+Judge: 1) does it look like a genuine, unedited camera photo, or show signs of AI generation, editing, or being a photo of a screen; 2) is damage visible.
+Reply with JSON only: {"verdict":"authentic"|"suspicious"|"likely_manipulated","risk":0-100,"shows_damage":true|false,"damage":"short description or empty","reasons":[up to 2 short strings]}`;
+  try{ return await S.sample.json(prompt,{images:[blob],modelTier:"default"}) }catch(e){ return {error:e.code||"failed"} }
+}
+
+function loadPast(){ try{ return JSON.parse(localStorage.getItem("mirador-photos")||"[]") }catch(e){ return [] } }
+function savePast(x){ try{ const a=loadPast(); a.push(x); localStorage.setItem("mirador-photos",JSON.stringify(a.slice(-200))) }catch(e){} }
+renderCases(); render();
+</script>
+</body>
+</html>
