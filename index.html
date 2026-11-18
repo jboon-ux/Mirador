@@ -161,7 +161,14 @@ button{font:inherit;cursor:pointer;color:inherit}
 .s3 .n{width:32px;height:32px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);font-weight:700;display:grid;place-items:center;font-size:15px}
 .s3 h3{font-size:17px;font-weight:700}
 .s3 p{margin:0;color:var(--body);font-size:15px}
-.signals{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px}
+.vsteps{display:flex;flex-direction:column;max-width:760px}
+.vstep{display:flex;gap:20px;padding:18px 0;position:relative;align-items:flex-start}
+.vstep:not(:last-child)::before{content:"";position:absolute;left:17px;top:54px;bottom:-4px;width:2px;background:var(--line)}
+.vstep .vn{flex:none;width:36px;height:36px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);font-weight:700;display:grid;place-items:center;font-size:15px;position:relative}
+.vstep h3{font-size:17px;font-weight:700;margin-bottom:4px}
+.vstep p{margin:0;color:var(--body);font-size:15px;max-width:58ch}
+.vstep img.vimg{flex:none;width:72px;align-self:center;margin-left:auto}
+.signals{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:24px}
 .sig-item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
 .sig-item b{font-size:14px;font-weight:700}
 .sig-item span{color:var(--body);font-size:13.5px;line-height:1.4}
@@ -225,10 +232,10 @@ footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var
 
   <section class="how" id="how" aria-labelledby="howTitle">
     <h2 id="howTitle">How Mirador works</h2>
-    <div class="steps3">
-      <div class="s3"><span class="n">1</span><h3>Capture live</h3><p>The refund button opens the camera, never the gallery. No screenshots, no old photos, no images found online.</p></div>
-      <div class="s3"><span class="n">2</span><h3>Check five signals</h3><p>Five checks, each catches a different trick, from capture timing to the final seal.</p><img class="s3img" src="assets/mascotte-loupe.png" alt=""></div>
-      <div class="s3"><span class="n">3</span><h3>Decide and seal</h3><p>Honest buyers are refunded at once. Fakes are stopped. Every photo gets a fingerprint, so it can't be changed later.</p></div>
+    <div class="vsteps">
+      <div class="vstep"><span class="vn">1</span><div><h3>Capture live</h3><p>The refund button opens the camera, never the gallery. No screenshots, no old photos, no images found online.</p></div></div>
+      <div class="vstep"><span class="vn">2</span><div><h3>Check five signals</h3><p>Five checks, each catches a different trick, from capture timing to the final seal.</p></div><img class="vimg" src="assets/mascotte-loupe.png" alt=""></div>
+      <div class="vstep"><span class="vn">3</span><div><h3>Decide and seal</h3><p>Honest buyers are refunded at once. Fakes are stopped. Every photo gets a fingerprint, so it can't be changed later.</p></div></div>
     </div>
     <div class="signals">
       <div class="sig-item"><b>Capture timing</b><span>No gallery photos, screenshots or downloads</span></div>
