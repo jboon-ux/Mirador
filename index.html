@@ -161,10 +161,11 @@ button{font:inherit;cursor:pointer;color:inherit}
 .s3 .n{width:32px;height:32px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);font-weight:700;display:grid;place-items:center;font-size:15px}
 .s3 h3{font-size:17px;font-weight:700}
 .s3 p{margin:0;color:var(--body);font-size:15px}
-.sig{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
-.sig li{color:var(--body);font-size:15px;line-height:1.35;padding-left:16px;position:relative}
-.sig li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--brand)}
-.sig li b{color:var(--ink)}
+.signals{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:16px}
+.sig-item{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.sig-item b{font-size:14px;font-weight:700}
+.sig-item span{color:var(--body);font-size:13.5px;line-height:1.4}
+@media (max-width:900px){.signals{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .who-for{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media (max-width:760px){.who-for{grid-template-columns:1fr}}
 
@@ -226,8 +227,15 @@ footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var
     <h2 id="howTitle">How Mirador works</h2>
     <div class="steps3">
       <div class="s3"><span class="n">1</span><h3>Capture live</h3><p>The refund button opens the camera, never the gallery. No screenshots, no old photos, no images found online.</p></div>
-      <div class="s3"><span class="n">2</span><h3>Check five signals</h3><p>Each one catches a different trick:</p><ul class="sig"><li><b>Capture timing:</b> no gallery photos, screenshots or downloads</li><li><b>File metadata:</b> no editing app or AI-generator traces</li><li><b>Reuse:</b> never seen in another claim or account</li><li><b>AI review:</b> the damage is real and on the right item</li><li><b>Seal:</b> unchanged since the moment of capture</li></ul><img class="s3img" src="assets/mascotte-loupe.png" alt=""></div>
+      <div class="s3"><span class="n">2</span><h3>Check five signals</h3><p>Five checks, each catches a different trick, from capture timing to the final seal.</p><img class="s3img" src="assets/mascotte-loupe.png" alt=""></div>
       <div class="s3"><span class="n">3</span><h3>Decide and seal</h3><p>Honest buyers are refunded at once. Fakes are stopped. Every photo gets a fingerprint, so it can't be changed later.</p></div>
+    </div>
+    <div class="signals">
+      <div class="sig-item"><b>Capture timing</b><span>No gallery photos, screenshots or downloads</span></div>
+      <div class="sig-item"><b>File metadata</b><span>No editing app or AI-generator traces</span></div>
+      <div class="sig-item"><b>Reuse</b><span>Never seen in another claim or account</span></div>
+      <div class="sig-item"><b>AI review</b><span>The damage is real, on the right item</span></div>
+      <div class="sig-item"><b>Seal</b><span>Unchanged since the moment of capture</span></div>
     </div>
   </section>
 

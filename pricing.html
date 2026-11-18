@@ -186,14 +186,15 @@ footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var
 .who.mirador::before{content:"";width:18px;height:18px;border-radius:50%;background:#fff url("assets/mascotte-face.png") center/cover}
 .s3img{width:84px;align-self:flex-end;margin-top:8px}
 
-.tablewrap{overflow-x:auto}
-table.price{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:16px;font-size:15px}
-table.price th,table.price td{padding:14px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
-table.price th{background:var(--chip);font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-table.price td{color:var(--body)}
-table.price td:first-child{font-weight:600;color:var(--ink)}
-table.price tr:last-child td{border-bottom:0}
-.price-note{font-size:13px;color:var(--muted);margin:14px 0 0}
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.plans{grid-template-columns:1fr}}
+.plan{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:10px}
+.plan h3{font-size:17px;font-weight:700}
+.plan .amount{font-size:34px;font-weight:800;letter-spacing:-.02em;color:var(--brand-ink)}
+.plan .amount span{font-size:16px;font-weight:600;color:var(--muted)}
+.plan p{margin:0;color:var(--body);font-size:15px}
+.planhl{border-color:var(--brand);border-width:2px}
+.addons h2{margin-top:0}
 </style>
 
 </head>
@@ -208,24 +209,43 @@ table.price tr:last-child td{border-bottom:0}
 
   <header class="hero"><div class="htext">
     <span class="eyebrow">Pricing</span>
-    <h1>A business model to validate,<br> not a forecast.</h1>
-    <p>A monthly subscription based on volume, possibly complemented by a commission on recovered refunds, with integrations into business software as a growth lever. The figures below are starting orders of magnitude. None of them is validated.</p>
+    <h1>Pricing that scales<br> with your volume.</h1>
+    <p>A monthly subscription based on volume, possibly complemented by a commission on recovered refunds, with integrations into business software as a growth lever.</p>
   </div></header>
 
-  <section class="how" aria-labelledby="priceTitle">
-    <h2 id="priceTitle">The hypotheses on the table</h2>
-    <div class="tablewrap"><table class="price">
-      <tr><th>Hypothesis</th><th>Starting value</th><th>How to validate it</th></tr>
-      <tr><td>Small business</td><td>&euro;50 to &euro;300 per month, depending on volume</td><td>Ask what a dispute costs them, and what they would pay</td></tr>
-      <tr><td>Larger or integrated business</td><td>Custom quote</td><td>A pilot integrated into their own tool</td></tr>
-      <tr><td>Commission on recovered refunds</td><td>Percentage to be defined, not yet priced</td><td>Measurable through the platforms' invoice adjustments; to be tested with five restaurants</td></tr>
-      <tr><td>Insurance or guarantee (later option)</td><td>For example, a reduced premium for the tool's clients</td><td>Only if the proof product works; not a prerequisite</td></tr>
-      <tr><td>Illustration: 200 clients at &euro;150 per month</td><td>About &euro;360k of annual recurring revenue</td><td>A simple calculation, not a forecast</td></tr>
-    </table></div>
-    <p class="price-note">All figures on this page are unvalidated starting orders of magnitude.</p>
+  <section class="how" aria-labelledby="plansTitle">
+    <h2 id="plansTitle">Plans</h2>
+    <div class="plans">
+      <div class="plan planhl">
+        <h3>Small business</h3>
+        <div class="amount">&euro;50&ndash;300 <span>/ month</span></div>
+        <p>Depending on your monthly volume.</p>
+      </div>
+      <div class="plan">
+        <h3>Larger or integrated business</h3>
+        <div class="amount">Custom quote</div>
+        <p>Tailored to your refund flow and integrated into your own tools.</p>
+      </div>
+    </div>
   </section>
 
-  <footer>Mirador is an early-stage project. Prototype. Nothing on this page is a committed price or a revenue forecast.</footer>
+  <section class="how addons" aria-labelledby="addonsTitle">
+    <h2 id="addonsTitle">Options</h2>
+    <div class="plans">
+      <div class="plan">
+        <h3>Commission on recovered refunds</h3>
+        <div class="amount">Optional</div>
+        <p>On top of the subscription, as a percentage of the refunds Mirador recovers for you.</p>
+      </div>
+      <div class="plan">
+        <h3>Insurance or guarantee</h3>
+        <div class="amount">Coming later</div>
+        <p>For example, a reduced premium for businesses using Mirador.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>Mirador is an early-stage project. Prototype.</footer>
 </div>
 
 </body>
