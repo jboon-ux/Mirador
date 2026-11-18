@@ -193,7 +193,9 @@ footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var
 .plan .amount{font-size:34px;font-weight:800;letter-spacing:-.02em;color:var(--brand-ink)}
 .plan .amount span{font-size:16px;font-weight:600;color:var(--muted)}
 .plan p{margin:0;color:var(--body);font-size:15px}
-.planhl{border-color:var(--brand);border-width:2px}
+.planhl{border-color:var(--brand);border-width:2px;position:relative;padding-right:150px;min-height:170px}
+.plan-mascot{position:absolute;right:16px;bottom:0;width:118px}
+@media (max-width:760px){.planhl{padding-right:108px}.planhl .amount{font-size:26px;white-space:nowrap}.planhl .amount span{font-size:13px}.plan-mascot{width:86px;right:10px}}
 .addons h2{margin-top:0}
 </style>
 
@@ -211,7 +213,7 @@ footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var
     <span class="eyebrow">Pricing</span>
     <h1>Pricing that grows<br> with you.</h1>
     <p>A monthly subscription based on your volume, with an optional commission on the refunds we help you recover.</p>
-  </div><div class="mascot-wrap"><img class="mascot" src="assets/mascotte-prix.png" alt="La mascotte Mirador, un suricate tenant une pièce"></div></header>
+  </div></header>
 
   <section class="how" aria-labelledby="plansTitle">
     <h2 id="plansTitle">Plans</h2>
@@ -220,6 +222,7 @@ footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var
         <h3>Small business</h3>
         <div class="amount">From &euro;50 <span>/ month</span></div>
         <p>The exact rate depends on your monthly volume.</p>
+        <img class="plan-mascot" src="assets/mascotte-prix.png" alt="La mascotte Mirador, un suricate tenant une pièce en euros">
       </div>
       <div class="plan">
         <h3>Larger or integrated business</h3>
