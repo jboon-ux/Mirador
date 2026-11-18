@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Mirador · Stop paying for fake damage photos</title>
-<meta name="description" content="Mirador asks buyers for a live photo, checks it in seconds and tells marketplaces and food-delivery apps whether to refund.">
+<meta name="description" content="Mirador lets businesses receive photos, videos and documents from their customers, with proof they were captured live.">
 <link rel="icon" type="image/png" href="assets/mascotte-face.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
@@ -161,6 +161,10 @@ button{font:inherit;cursor:pointer;color:inherit}
 .s3 .n{width:32px;height:32px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);font-weight:700;display:grid;place-items:center;font-size:15px}
 .s3 h3{font-size:17px;font-weight:700}
 .s3 p{margin:0;color:var(--body);font-size:15px}
+.sig{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.sig li{color:var(--body);font-size:15px;line-height:1.35;padding-left:16px;position:relative}
+.sig li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--brand)}
+.sig li b{color:var(--ink)}
 .who-for{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media (max-width:760px){.who-for{grid-template-columns:1fr}}
 
@@ -194,8 +198,8 @@ footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var
 
   <header class="hero"><div class="htext">
     <span class="eyebrow">Refund fraud protection for marketplaces and food delivery</span>
-    <h1>Stop paying for<br> fake damage photos.</h1>
-    <p>When a buyer says an order arrived damaged, Mirador asks for a live photo, checks it in seconds and tells the platform whether to refund. The seller or restaurant has nothing to prove.</p>
+    <h1>We use AI to protect you,<br> not to lie.</h1>
+    <p>Mirador lets any business receive photos, videos and documents from its customers, with proof they were captured live.</p>
     <div class="cta"><a class="btn" href="#demo">Try the demo</a><a class="btn light" href="#how">How it works</a></div>
   </div><div class="mascot-wrap"><img class="mascot" src="assets/mascotte-hero.png" alt="La mascotte Mirador, un suricate"></div></header>
 
@@ -222,7 +226,7 @@ footer{font-size:13px;color:var(--muted);max-width:90ch;border-top:1px solid var
     <h2 id="howTitle">How Mirador works</h2>
     <div class="steps3">
       <div class="s3"><span class="n">1</span><h3>Capture live</h3><p>The refund button opens the camera, never the gallery. No screenshots, no old photos, no images found online.</p></div>
-      <div class="s3"><span class="n">2</span><h3>Check five signals</h3><p>When it was taken, whether an editing or AI app touched it, whether it was used before, and whether it shows the problem on the right item.</p><img class="s3img" src="assets/mascotte-loupe.png" alt=""></div>
+      <div class="s3"><span class="n">2</span><h3>Check five signals</h3><p>Each one catches a different trick:</p><ul class="sig"><li><b>Capture timing:</b> no gallery photos, screenshots or downloads</li><li><b>File metadata:</b> no editing app or AI-generator traces</li><li><b>Reuse:</b> never seen in another claim or account</li><li><b>AI review:</b> the damage is real and on the right item</li><li><b>Seal:</b> unchanged since the moment of capture</li></ul><img class="s3img" src="assets/mascotte-loupe.png" alt=""></div>
       <div class="s3"><span class="n">3</span><h3>Decide and seal</h3><p>Honest buyers are refunded at once. Fakes are stopped. Every photo gets a fingerprint, so it can't be changed later.</p></div>
     </div>
   </section>
